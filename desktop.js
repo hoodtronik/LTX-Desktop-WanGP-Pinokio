@@ -37,7 +37,7 @@ module.exports = {
     {
       method: "local.set",
       params: {
-        url: "{{input.event[0]}}"
+        url: "{{input && input.event ? input.event[0] : null}}"
       }
     }
   ]
