@@ -1,6 +1,13 @@
 module.exports = {
   daemon: true,
   run: [
+    // Step 0: Clear any stale url from previous runs
+    {
+      method: "local.set",
+      params: {
+        url: null
+      }
+    },
     // Step 1: Load saved config (Wan2GP path)
     {
       method: "json.get",
