@@ -2,7 +2,7 @@ const path = require('path')
 module.exports = {
   version: "5.0",
   menu: async (kernel, info) => {
-    let installed = info.exists("app/env")
+    let installed = info.exists("app/backend/.venv")
     let running = {
       install: info.running("install.js"),
       start: info.running("start.js"),
@@ -24,8 +24,8 @@ module.exports = {
           return [{
             default: true,
             icon: "fa-solid fa-rocket",
-            text: "Open Web UI",
-            href: local.url,
+            text: "Open API Docs",
+            href: local.url + "/docs",
           }, {
             icon: 'fa-solid fa-terminal',
             text: "Terminal",
