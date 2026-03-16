@@ -52,7 +52,9 @@ module.exports = {
         path: "app",
         message: [
           "npm install -g pnpm",
-          "pnpm install",
+          "pnpm install --ignore-scripts",
+          "npx electron-rebuild || echo Electron rebuild skipped",
+          "node node_modules/electron/install.js || echo Electron binary already installed",
         ]
       }
     },
