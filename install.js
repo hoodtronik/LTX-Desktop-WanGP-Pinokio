@@ -65,7 +65,7 @@ module.exports = {
       params: {
         path: "app/backend",
         message: [
-          "uv pip install --python .venv/Scripts/python.exe -r {{local.config.wangp_root}}/requirements.txt"
+          "uv pip install --python .venv/Scripts/python.exe --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ort-cuda-13-nightly/pypi/simple/ -r {{local.config.wangp_root}}/requirements.txt"
         ]
       }
     },
