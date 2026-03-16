@@ -20,7 +20,7 @@ module.exports = {
         form: [{
           key: "wangp_root",
           title: "Wan2GP folder path",
-          description: "Example: F:\\pinokio\\api\\wan.git\\app  or  D:\\Wan2GP",
+          description: "Example: F:\\pinokio\\api\\wan.git\\app  or  C:\\Wan2GP",
           placeholder: "Paste path to folder containing wgp.py (or leave empty)",
           default: ""
         }]
