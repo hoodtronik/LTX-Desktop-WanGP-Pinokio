@@ -1,85 +1,67 @@
-# LTX Desktop - WanGP Backend Launcher
+# LTX-Desktop-WanGP — Pinokio Launcher
 
-LTX Desktop powered by WanGP — a local AI video generation server using the LTX-2 engine with WanGP bridge for enhanced model support.
+> **One-click installer and launcher for [LTX-Desktop-WanGP](https://github.com/deepbeepmeep/LTX-Desktop-WanGP) via [Pinokio](https://pinokio.computer).**
 
-## What it does
+This repo provides Pinokio launcher scripts for the [LTX Desktop](https://github.com/deepbeepmeep/LTX-Desktop-WanGP) project — a desktop AI video generation app powered by the LTX-2 engine with a [WanGP](https://github.com/deepbeepmeep/Wan2GP) backend for local GPU-accelerated generation.
 
-This launcher runs the **Python FastAPI backend** of [LTX-Desktop-WanGP](https://github.com/deepbeepmeep/LTX-Desktop-WanGP), which provides:
+## Features
 
-- **Video generation** via LTX-2 models (text-to-video, image-to-video)
-- **Image generation** through the WanGP bridge
-- **WanGP integration** for local GPU-accelerated generation using your existing Wan2GP installation
-- **Model management** with automatic downloading from HuggingFace
-- **SageAttention acceleration** for faster inference on supported GPUs
+- **1-click install** — clones the upstream repo and sets up the Python backend with `uv sync`
+- **Auto-detects WanGP** — if you have [Wan2GP](https://github.com/deepbeepmeep/Wan2GP) installed as a sibling Pinokio app, it's detected automatically
+- **FastAPI backend server** — launches the LTX-2 generation server with SageAttention acceleration
+- **Standalone Electron launcher** — includes `launch.bat` for running the full desktop app outside Pinokio
 
-## How to use
+## Install via Pinokio
 
-1. Click **Install** to clone the repository and set up Python dependencies
-2. Click **Start** to launch the backend FastAPI server
-3. The server URL will appear in Pinokio — use it to access the API
+1. Open Pinokio
+2. Click **Download** and paste this URL:
+   ```
+   https://github.com/hoodtronik/LTX-Desktop-WanGP-Pinokio
+   ```
+3. Click **Install** to set up dependencies
+4. Click **Start** to launch the backend server
 
-### WanGP Integration
+## WanGP Integration
 
-If you have [Wan2GP](https://github.com/deepbeepmeep/Wan2GP) installed as a sibling Pinokio app (at `../wan.git/app/`), it will be automatically detected. The backend delegates video/image generation to WanGP when available.
+For local video generation (no API keys needed), install [Wan2GP](https://github.com/deepbeepmeep/Wan2GP) as a sibling Pinokio app. The launcher auto-detects it and sets `WANGP_ROOT` automatically.
 
-## API Documentation
+If your Wan2GP is in a non-standard location, set the `WANGP_ROOT` environment variable to the folder containing `wgp.py`.
 
-The backend exposes a FastAPI server. Once running, visit the server URL for the API.
+## Standalone Desktop App
+
+To run the full Electron desktop app (with React UI), double-click **`launch.bat`** in the project root. This installs pnpm/Node.js dependencies on first run and launches the app via `pnpm dev`.
+
+## Upstream
+
+This is a Pinokio launcher fork of **[deepbeepmeep/LTX-Desktop-WanGP](https://github.com/deepbeepmeep/LTX-Desktop-WanGP)**. All core application code lives in the upstream repo.
+
+## API Usage
+
+The backend exposes a FastAPI server. Once running, access the interactive API docs at `http://127.0.0.1:<PORT>/docs`.
 
 ### Python
-
 ```python
 import requests
+BASE_URL = "http://127.0.0.1:<PORT>"
 
-BASE_URL = "http://127.0.0.1:<PORT>"  # Replace with actual port from Pinokio
-
-# Check health
-r = requests.get(f"{BASE_URL}/health")
-print(r.json())
+# Health check
+requests.get(f"{BASE_URL}/health").json()
 
 # Generate video
-payload = {
-    "prompt": "A cinematic shot of a mountain landscape at sunset",
-    "num_frames": 65,
-    "width": 768,
-    "height": 512
-}
-r = requests.post(f"{BASE_URL}/api/generate", json=payload)
-print(r.json())
-```
-
-### JavaScript
-
-```javascript
-const BASE_URL = "http://127.0.0.1:<PORT>"; // Replace with actual port
-
-// Check health
-const health = await fetch(`${BASE_URL}/health`).then(r => r.json());
-console.log(health);
-
-// Generate video
-const response = await fetch(`${BASE_URL}/api/generate`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    prompt: "A cinematic shot of a mountain landscape at sunset",
-    num_frames: 65,
-    width: 768,
-    height: 512
-  })
-});
-const result = await response.json();
-console.log(result);
+requests.post(f"{BASE_URL}/api/generate", json={
+    "prompt": "A cinematic mountain landscape at sunset",
+    "num_frames": 65, "width": 768, "height": 512
+}).json()
 ```
 
 ### cURL
-
 ```bash
-# Health check
 curl http://127.0.0.1:<PORT>/health
-
-# Generate video
 curl -X POST http://127.0.0.1:<PORT>/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "A cinematic shot of a mountain landscape at sunset", "num_frames": 65, "width": 768, "height": 512}'
+  -d '{"prompt": "A cinematic mountain landscape", "num_frames": 65}'
 ```
+
+## License
+
+See the [upstream repository](https://github.com/deepbeepmeep/LTX-Desktop-WanGP) for license details.
