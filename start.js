@@ -24,7 +24,7 @@ module.exports = {
         ],
         on: [{
           // The backend prints "Server running on http://127.0.0.1:<port>"
-          event: "/(http:\\/\\/[0-9.:]+)/",
+          event: "/http:\\/\\/[0-9.:]+/",
           done: true
         }]
       }
@@ -32,7 +32,7 @@ module.exports = {
     {
       method: "local.set",
       params: {
-        url: "{{input.event[1]}}"
+        url: "{{input.event[0]}}"
       }
     }
   ]

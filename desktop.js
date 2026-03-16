@@ -22,7 +22,7 @@ module.exports = {
         ],
         on: [{
           // Electron/Vite prints the local dev URL when ready
-          event: "/(http:\\/\\/[0-9.:]+)/",
+          event: "/http:\\/\\/[0-9.:]+/",
           done: true
         }]
       }
@@ -30,7 +30,7 @@ module.exports = {
     {
       method: "local.set",
       params: {
-        url: "{{input.event[1]}}"
+        url: "{{input.event[0]}}"
       }
     }
   ]
