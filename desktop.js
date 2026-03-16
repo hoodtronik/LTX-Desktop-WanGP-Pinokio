@@ -8,22 +8,20 @@ module.exports = {
         config: "config.json"
       }
     },
-    // Step 2: Launch the Python FastAPI backend server
+    // Step 2: Launch the full Electron desktop app via pnpm dev
     {
       method: "shell.run",
       params: {
-        path: "app/backend",
+        path: "app",
         env: {
-          // Required: tells the backend where to store models, outputs, settings
-          LTX_APP_DATA_DIR: "{{path.resolve(cwd, 'cache')}}",
-          // Read WANGP_ROOT from saved config
+          // Set WANGP_ROOT from saved config so Electron passes it to the Python backend
           WANGP_ROOT: "{{local.config && local.config.wangp_root ? local.config.wangp_root : ''}}",
         },
         message: [
-          "{{platform === 'win32' ? '.venv\\\\Scripts\\\\python' : '.venv/bin/python'}} ltx2_server.py",
+          "pnpm dev",
         ],
         on: [{
-          // The backend prints "Server running on http://127.0.0.1:<port>"
+          // Electron/Vite prints the local dev URL when ready
           event: "/(http:\\/\\/[0-9.:]+)/",
           done: true
         }]

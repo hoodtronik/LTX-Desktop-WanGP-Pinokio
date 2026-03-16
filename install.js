@@ -10,9 +10,31 @@ module.exports = {
       },
       when: "{{!exists('app')}}"
     },
-    // Step 2: Install Python backend dependencies using uv sync
-    // This creates/uses a .venv inside app/backend with all required packages
-    // (torch cu128, fastapi, diffusers, ltx-core, ltx-pipelines, etc.)
+    // Step 2: Ask user for their Wan2GP location
+    {
+      method: "input",
+      params: {
+        title: "Wan2GP Location",
+        description: "Select the folder containing your Wan2GP installation (the folder with wgp.py). Leave empty to skip if you don't have Wan2GP installed.",
+        form: [{
+          key: "wangp_root",
+          title: "Wan2GP folder path",
+          description: "Example: F:\\pinokio\\api\\wan.git\\app  or  D:\\Wan2GP",
+          placeholder: "Paste path to folder containing wgp.py (or leave empty)",
+          default: ""
+        }]
+      }
+    },
+    // Step 3: Save the Wan2GP path to config.json
+    {
+      method: "json.set",
+      params: {
+        "config.json": {
+          "wangp_root": "{{input.wangp_root || ''}}"
+        }
+      }
+    },
+    // Step 4: Install Python backend dependencies using uv sync
     {
       method: "shell.run",
       params: {
@@ -22,18 +44,29 @@ module.exports = {
         ]
       }
     },
-    // Step 3: Install Wan2GP requirements into the backend venv (if Wan2GP exists)
+    // Step 5: Install Node.js dependencies for Electron desktop app
     {
-      when: "{{exists('../wan.git/app/wgp.py')}}",
+      method: "shell.run",
+      params: {
+        path: "app",
+        message: [
+          "npm install -g pnpm",
+          "pnpm install",
+        ]
+      }
+    },
+    // Step 6: Install Wan2GP requirements into the backend venv (if path was provided)
+    {
+      when: "{{local.config && local.config.wangp_root}}",
       method: "shell.run",
       params: {
         path: "app/backend",
         message: [
-          "uv pip install --python .venv/Scripts/python.exe -r {{path.resolve(cwd, '..', 'wan.git', 'app', 'requirements.txt')}}"
+          "uv pip install --python .venv/Scripts/python.exe -r {{local.config.wangp_root}}/requirements.txt"
         ]
       }
     },
-    // Step 4: Create the app data / cache directory
+    // Step 7: Create the cache directory for standalone backend mode
     {
       method: "shell.run",
       params: {
@@ -46,7 +79,7 @@ module.exports = {
       method: "input",
       params: {
         title: "Installation completed",
-        description: "Click 'Start' in the left menu to launch the LTX Desktop backend server."
+        description: "Click 'Launch Desktop' in the left menu to open the full LTX Desktop app, or 'Start Backend' to run just the API server."
       }
     },
   ]
