@@ -21,7 +21,7 @@ module.exports = {
     } else if (installed) {
       if (running.desktop) {
         let local = info.local("desktop.js")
-        if (local && local.url) {
+        if (local && local.url && String(local.url).startsWith('http')) {
           return [{
             default: true,
             icon: "fa-solid fa-desktop",
@@ -42,7 +42,7 @@ module.exports = {
         }
       } else if (running.start) {
         let local = info.local("start.js")
-        if (local && local.url) {
+        if (local && local.url && String(local.url).startsWith('http')) {
           return [{
             default: true,
             icon: "fa-solid fa-rocket",
