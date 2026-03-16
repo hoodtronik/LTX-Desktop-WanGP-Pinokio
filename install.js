@@ -1,14 +1,15 @@
 module.exports = {
   run: [
-    // Step 1: Clone the repo if not already cloned
+    // Step 1: Remove broken app/ dir (if exists without package.json) and clone
     {
       method: "shell.run",
       params: {
         message: [
+          "{{platform === 'win32' ? 'if exist app rmdir /s /q app' : 'rm -rf app'}}",
           "git clone https://github.com/deepbeepmeep/LTX-Desktop-WanGP.git app",
         ]
       },
-      when: "{{!exists('app')}}"
+      when: "{{!exists('app/package.json')}}"
     },
     // Step 2: Ask user for their Wan2GP location
     {
